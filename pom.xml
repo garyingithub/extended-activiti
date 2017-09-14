@@ -82,7 +82,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>org.activiti.MyApp</mainClass>
+                    <mainClass>cn.edu.sysu.workflow.cloud.engine.activiti.MyApp</mainClass>
                 </configuration>
 
                 <executions>

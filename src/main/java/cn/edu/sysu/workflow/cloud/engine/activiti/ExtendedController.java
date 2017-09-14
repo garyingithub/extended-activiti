@@ -1,4 +1,4 @@
-package org.activiti;
+package cn.edu.sysu.workflow.cloud.engine.activiti;
 
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.engine.RepositoryService;
