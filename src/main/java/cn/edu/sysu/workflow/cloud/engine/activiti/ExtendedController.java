@@ -4,18 +4,24 @@ import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.task.Task;
-import org.activiti.rest.service.api.repository.DeploymentResponse;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
-
+import java.util.function.Consumer;
 
 
 @RestController
@@ -30,9 +36,7 @@ public class ExtendedController {
         if (taskList.size() == 0) {
             return Boolean.FALSE.toString();
         }
-        taskList.forEach(task -> {
-            taskService.complete(task.getId(), data);
-        });
+        taskList.forEach(task -> taskService.complete(task.getId(), data));
         return Boolean.TRUE.toString();
     }
 
@@ -42,25 +46,14 @@ public class ExtendedController {
         if (taskList.size() == 0) {
             throw new RuntimeException("No such Task");
         }
-        taskList.forEach(task -> {
-            taskService.claim(task.getId(), "admin");
-        });
+        taskList.forEach(task -> taskService.claim(task.getId(), "admin"));
     }
 
     @Resource
     private RuntimeService runtimeService;
 
-
-    Random random = new Random();
-
-    @RequestMapping(value="/startProcess/{definitionId}", method= RequestMethod.POST, produces= MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/startProcess/{definitionId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public String startHireProcess(@RequestBody(required = false) Map<String, Object> data, @PathVariable String definitionId) {
-
-//        Applicant applicant = new Applicant(data.get("name"), data.get("email"), data.get("phoneNumber"));
-//        applicantRepository.save(applicant);
-
-//        Map<String, Object> variables = new HashMap<String, Object>();
-//        variables.put("applicant", applicant);
         return runtimeService.startProcessInstanceByKey(definitionId, data).getProcessInstanceId();
     }
 
@@ -71,4 +64,28 @@ public class ExtendedController {
     public BpmnModel getBpmnModel(@PathVariable String processKey) {
         return repositoryService.getBpmnModel(processKey);
     }
+
+    void uploadFile(HttpServletRequest request) throws IOException {
+
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(request.getSession()
+                .getServletContext());
+
+        if (multipartResolver.isMultipart(request)) {
+            MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
+            multiRequest.getFileMap().forEach((key, value) -> {
+                try {
+                    repositoryService.createDeployment().name(key)
+                            .addInputStream(key, value.getInputStream());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
+    }
+
+    @RequestMapping(value = "/uploadDefinition}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void uploadDefinition(HttpServletRequest request) throws IOException {
+       uploadFile(request);
+    }
+
 }

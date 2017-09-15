@@ -53,7 +53,7 @@ public class HireProcessTest {
     @Test
     public void testHappyPath() {
 
-        BpmnModel model = repositoryService.getBpmnModel("testUserTasksWithParallel:1:11");
+//        BpmnModel model = repositoryService.getBpmnModel("testUserTasksWithParallel:1:11");
     }
 
 }
