@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+             typeLanguage="http://www.w3.org/2001/XMLSchema"
+             expressionLanguage="http://www.w3.org/1999/XPath"
+             targetNamespace="http://impl.service.activiti.engine.cloud.workflow.sysu.edu.cn/"
+             xmlns:tns="http://impl.service.activiti.engine.cloud.workflow.sysu.edu.cn/"
+             xmlns:mpc="http://impl.service.activiti.engine.cloud.workflow.sysu.edu.cn/"><!-- 这里的namespace是对应于wsdl中的namespace的，在这里定义一下方便后面使用 -->
+
+    <!--引入外部的wsdl文件中存储的数据，也就是我们的webservice生成的wsdl数据 -->
+    <import importType="http://schemas.xmlsoap.org/wsdl/"
+            location="http://localhost:9090/mpc?wsdl"
+            namespace="http://impl.service.activiti.engine.cloud.workflow.sysu.edu.cn" />
+
+    <process id="process1" name="process1">
+        <startEvent id="startevent1" name="Start"></startEvent>
+        <userTask id="usertask1" name="Ready Task"></userTask>
+        <serviceTask id="servicetask1" name="Web service invocation"
+                     implementation="##WebService" operationRef="createMpcOper"><!-- 这里的 implementation="##WebService"
+                表明这是一个webservice任务 operationRef="createPostOper"指明了这个webservice要执行的操作 -->
+
+            <dataInputAssociation><!-- 要输入的参数 ，可以有多个 -->
+                <sourceRef>nameVar</sourceRef><!--输入变量在流程中名称 -->
+                <targetRef>name</targetRef><!--输入变量在wsdl中的名称 -->
+            </dataInputAssociation>
+            <dataOutputAssociation><!--输出的参数，只可以有一个 -->
+                <sourceRef>address</sourceRef><!-- 输出变量在wsdl中名称 -->
+                <targetRef>addVar</targetRef><!-- 输出变量在流程中的名称 -->
+            </dataOutputAssociation>
+            <!-- sourceRef就是变量在来源中的名称 targetRef就是变量在目标中的名称 -->
+        </serviceTask>
+
+        <userTask id="usertask2" name="EndTask"></userTask>
+        <endEvent id="endevent1" name="End"></endEvent>
+        <sequenceFlow id="flow1" name="" sourceRef="startevent1"
+                      targetRef="usertask1"></sequenceFlow>
+        <sequenceFlow id="flow2" name="" sourceRef="usertask1"
+                      targetRef="servicetask1"></sequenceFlow>
+        <sequenceFlow id="flow3" name="" sourceRef="servicetask1"
+                      targetRef="usertask2"></sequenceFlow>
+        <sequenceFlow id="flow4" name="" sourceRef="usertask2"
+                      targetRef="endevent1"></sequenceFlow>
+    </process>
+
+    <!-- 所谓的message 就是activiti 和 webservice 之间的数据交流的信息 -->
+    <message id="createMpcMsg" itemRef="tns:createMpcItem"></message>
+    <message id="createMpcResponseMsg" itemRef="tns:createMpcResponseItem"></message><!-- 这里定义了消息，itemRef="createMpcResponseItem"
+        定义了这个消息的类型 -->
+    <itemDefinition id="createMpcItem" structureRef="mpc:createMpc" />
+    <itemDefinition id="createMpcResponseItem" structureRef="mpc:createMpcResponse" /><!--
+        类型对应于wsdl中的文档结构 -->
+    <!--start -->
+    <itemDefinition id="nameVar" structureRef="string" />
+    <itemDefinition id="name" structureRef="string" />
+    <itemDefinition id="address" structureRef="string" />
+    <itemDefinition id="addVar" structureRef="string" />
+    <!-- end --><!-- 指定每个变量的类型 -->
+
+    <interface name="Mpc Service" implementationRef="MpcService">
+        <operation id="createMpcOper" name="Create Mpc Operation"
+                   implementationRef="mpc:createMpc">
+            <inMessageRef>createMpcMsg</inMessageRef>
+            <outMessageRef>createMpcResponseMsg</outMessageRef>
+        </operation>
+    </interface>
+
+
+
+
+    <bpmndi:BPMNDiagram id="BPMNDiagram_process1">
+        <bpmndi:BPMNPlane bpmnElement="process1" id="BPMNPlane_process1">
+            <bpmndi:BPMNShape bpmnElement="startevent1"
+                              id="BPMNShape_startevent1">
+                <omgdc:Bounds height="35" width="35" x="190" y="210"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="usertask1" id="BPMNShape_usertask1">
+                <omgdc:Bounds height="55" width="105" x="280" y="200"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="servicetask1"
+                              id="BPMNShape_servicetask1">
+                <omgdc:Bounds height="55" width="105" x="440" y="200"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="usertask2" id="BPMNShape_usertask2">
+                <omgdc:Bounds height="55" width="105" x="610" y="200"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
+                <omgdc:Bounds height="35" width="35" x="770" y="210"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+                <omgdi:waypoint x="225" y="227"></omgdi:waypoint>
+                <omgdi:waypoint x="280" y="227"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+                <omgdi:waypoint x="385" y="227"></omgdi:waypoint>
+                <omgdi:waypoint x="440" y="227"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
+                <omgdi:waypoint x="545" y="227"></omgdi:waypoint>
+                <omgdi:waypoint x="610" y="227"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+                <omgdi:waypoint x="715" y="227"></omgdi:waypoint>
+                <omgdi:waypoint x="770" y="227"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</definitions>

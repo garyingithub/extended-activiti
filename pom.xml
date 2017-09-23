@@ -47,6 +47,21 @@
             <version>${activiti.version}</version>
         </dependency>
 
+        <!--activiti-cxf是用于加载解析webService的bpmn用的，这个一定要用，否则加载会失败；xml-apis也是用于解析的-->
+
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-cxf</artifactId>
+            <version>${activiti.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+            <version>1.4.01</version>
+        </dependency>
+
+
         <dependency>
             <groupId>com.newrelic.agent.java</groupId>
             <artifactId>newrelic-agent</artifactId>

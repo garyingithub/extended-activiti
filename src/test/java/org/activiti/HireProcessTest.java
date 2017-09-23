@@ -1,7 +1,6 @@
 package org.activiti;
 
 import cn.edu.sysu.workflow.cloud.engine.activiti.MyApp;
-import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
