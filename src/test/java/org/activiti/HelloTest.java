@@ -17,6 +17,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.subethamail.wiser.Wiser;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -58,26 +59,37 @@ public class HelloTest {
                 .createStandaloneInMemProcessEngineConfiguration()
                 .buildProcessEngine();
         RepositoryService repositoryService = processEngine.getRepositoryService();
-        repositoryService.createDeployment().addClasspathResource("processes/testUserTasksWithParallel.bpmn20.xml").deploy();
-//        repositoryService.createDeployment().addClasspathResource("webService/WebService_Calculator.bpmn").deploy();
+//        repositoryService.createDeployment().addClasspathResource("processes/testUserTasksWithParallel.bpmn20.xml").deploy();
+        repositoryService.createDeployment().addClasspathResource("processes/test.bpmn").deploy();
+
         ProcessDefinition processDefinition = repositoryService
                 .createProcessDefinitionQuery().singleResult();
 
         RuntimeService runtimeService = processEngine.getRuntimeService();
 
         System.out.println(processDefinition.getKey());
-        // 初始化参数
-//        Map<String, Object> vars = new HashMap<String, Object>();
-//        vars.put("nameVar", "mpc_test");
-//        ProcessInstance pi = runtimeService.startProcessInstanceByKey(
-//                "testUserTasksWithParallel");
-//        // 完成第一个任务
+
+        ProcessInstance processInstance = runtimeService
+                .startProcessInstanceByKey(processDefinition.getKey());
+
+
         TaskService taskService = processEngine.getTaskService();
-        Task task = taskService.createTaskQuery().singleResult();
-        taskService.complete(task.getId());
-        // 输出调用Web Service后的参数
-//        String add = (String) runtimeService.getVariable(pi.getId(), "addVar");
-//        BpmnModel model = repositoryService.getBpmnModel("testUserTasksWithParallel:1:11");
+//        List<Task> tasks = taskService.createTaskQuery().taskCandidateGroup("sales").list();
+        List<Task> tasks = taskService.createTaskQuery().list();
+        for (Task task : tasks) {
+            System.out.println(task.getId());
+            System.out.println("Following task is available for sales group: " + task.getName());
+            // 认领任务这里由foozie认领，因为fozzie是sales组的成员
+            taskService.claim(task.getId(), "fozzie");
+        }
+        for (Task task : tasks) {
+            System.out.println("Task for fozzie: " + task.getName());
+            // 执行(完成)任务
+            taskService.complete(task.getId());
+        }
+//        Task task = taskService.createTaskQuery().singleResult();
+//        System.out.println(task.getId());
+//        taskService.complete(task.getId());
     }
 
 }

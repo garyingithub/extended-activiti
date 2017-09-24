@@ -18,7 +18,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.subethamail.wiser.Wiser;
 
+import java.text.Normalizer;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -78,16 +80,47 @@ public class webService_Calculator_TestCase {
 
         System.out.println(pi.getId());
 
+
         TaskService taskService = processEngine.getTaskService();
-        Task task = taskService.createTaskQuery().singleResult();
-        System.out.println(task.getId());
-        taskService.complete(task.getId());
-//        TaskService taskService = (TaskService) applicationContext.getBean("taskService");
+        FormService formService = processEngine.getFormService();
+
+        //获取第一个任务
+        List<Task> tasks = taskService.createTaskQuery().list();
+        for (Task task : tasks) {
+            System.out.println(task.getId());
+            System.out.println("Following task is available for sales group: " + task.getName());
+            // 认领任务这里由foozie认领，因为fozzie是sales组的成员
+            taskService.claim(task.getId(), "fozzie");
+        }
+        for (Task task : tasks) {
+            System.out.println("Task for fozzie: " + task.getName());
+            // 执行(完成)任务
+            taskService.complete(task.getId());
+        }
+
+        //获取第二个任务
+        tasks = taskService.createTaskQuery().list();
+        for (Task task : tasks) {
+            System.out.println(task.getId());
+            System.out.println("Following task is available for sales group: " + task.getName());
+            // 认领任务这里由foozie认领，因为fozzie是sales组的成员
+            taskService.claim(task.getId(), "fozzie");
+
+        }
+        for (Task task : tasks) {
+            System.out.println("Task for fozzie: " + task.getName());
+            // 执行(完成)任务
+            taskService.complete(task.getId());
+        }
+
+//        TaskService taskService = processEngine.getTaskService();
+//        Task task = taskService.createTaskQuery().singleResult();
+//        System.out.println(task.getId());
 //        taskService.claim(task.getId(), "yuyong");
-        taskService.complete(task.getId());
-        int output = (Integer) runtimeService.getVariable("5", "output3");
-        System.out.println(output);
-//        BpmnModel model = repositoryService.getBpmnModel("testUserTasksWithParallel:1:11");
+//        taskService.complete(task.getId());
+//        int output = (Integer) runtimeService.getVariable("5", "output3");
+//        System.out.println(output);
+
     }
 
 }

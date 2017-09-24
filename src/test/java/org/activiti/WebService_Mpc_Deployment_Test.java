@@ -32,16 +32,12 @@ public class WebService_Mpc_Deployment_Test extends AbstractTest {
                 "process1", vars);
         // 完成第一个任务
         Task task = taskService.createTaskQuery().singleResult();
+        System.out.println(task.getId());
+        taskService.claim(task.getId(),"yuyong");
+        taskService.complete(task.getId());
 //        taskService.complete(task.getId());
 //        // 输出调用Web Service后的参数
 //        String add = (String) runtimeService.getVariable(pi.getId(), "addVar");
-//        System.out.println("↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
-//        System.out.println();
-//        System.out.println();
-//        System.out.println("mpc_test现在居住的地点是—————————————————————————>" + add);
-//        System.out.println();
-//        System.out.println();
-        System.out.println("↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
     }
 
 }

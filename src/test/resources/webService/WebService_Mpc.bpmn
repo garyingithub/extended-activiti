@@ -6,14 +6,14 @@
              xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
              typeLanguage="http://www.w3.org/2001/XMLSchema"
              expressionLanguage="http://www.w3.org/1999/XPath"
-             targetNamespace="http://impl.service.activiti.engine.cloud.workflow.sysu.edu.cn/"
-             xmlns:tns="http://impl.service.activiti.engine.cloud.workflow.sysu.edu.cn/"
-             xmlns:mpc="http://impl.service.activiti.engine.cloud.workflow.sysu.edu.cn/"><!-- 这里的namespace是对应于wsdl中的namespace的，在这里定义一下方便后面使用 -->
+             targetNamespace="cn.edu.sysu.workflow.cloud.engine.activiti.service"
+             xmlns:tns="cn.edu.sysu.workflow.cloud.engine.activiti.service"
+             xmlns:mpc="http://service.activiti.engine.cloud.workflow.sysu.edu.cn/"><!-- 这里的namespace是对应于wsdl中的namespace的，在这里定义一下方便后面使用 -->
 
     <!--引入外部的wsdl文件中存储的数据，也就是我们的webservice生成的wsdl数据 -->
     <import importType="http://schemas.xmlsoap.org/wsdl/"
             location="http://localhost:9090/mpc?wsdl"
-            namespace="http://impl.service.activiti.engine.cloud.workflow.sysu.edu.cn" />
+            namespace="http://service.activiti.engine.cloud.workflow.sysu.edu.cn" />
 
     <process id="process1" name="process1">
         <startEvent id="startevent1" name="Start"></startEvent>
