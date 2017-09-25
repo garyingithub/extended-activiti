@@ -76,50 +76,66 @@ public class webService_Calculator_TestCase {
         Map<String,Object> map=new HashMap<String,Object>();
         map.put("input1", 2);
         map.put("input2", 3);
-        ProcessInstance pi=runtimeService.startProcessInstanceByKey("process1", map);
+//        ProcessInstance pi=runtimeService.startProcessInstanceByKey("process1", map);
+        ProcessInstance pi=runtimeService.startProcessInstanceById(processDefinition.getId(), map);
 
         System.out.println(pi.getId());
 
 
-        TaskService taskService = processEngine.getTaskService();
-        FormService formService = processEngine.getFormService();
-
-        //获取第一个任务
-        List<Task> tasks = taskService.createTaskQuery().list();
-        for (Task task : tasks) {
-            System.out.println(task.getId());
-            System.out.println("Following task is available for sales group: " + task.getName());
-            // 认领任务这里由foozie认领，因为fozzie是sales组的成员
-            taskService.claim(task.getId(), "fozzie");
-        }
-        for (Task task : tasks) {
-            System.out.println("Task for fozzie: " + task.getName());
-            // 执行(完成)任务
-            taskService.complete(task.getId());
-        }
+//        TaskService taskService = processEngine.getTaskService();
+//        FormService formService = processEngine.getFormService();
+////        获取第一个任务
+//        List<Task> tasks = taskService.createTaskQuery().list();
+//        for (Task task : tasks) {
+//            System.out.println(task.getId());
+//            System.out.println("Following task is available for sales group: " + task.getName());
+//            // 认领任务这里由foozie认领，因为fozzie是sales组的成员
+//            taskService.claim(task.getId(), "fozzie");
+//        }
+//        for (Task task : tasks) {
+//            System.out.println("Task for fozzie: " + task.getName());
+//            // 执行(完成)任务
+//            taskService.complete(task.getId());
+//        }
 
         //获取第二个任务
-        tasks = taskService.createTaskQuery().list();
-        for (Task task : tasks) {
-            System.out.println(task.getId());
-            System.out.println("Following task is available for sales group: " + task.getName());
-            // 认领任务这里由foozie认领，因为fozzie是sales组的成员
-            taskService.claim(task.getId(), "fozzie");
+//        tasks = taskService.createTaskQuery().list();
+//        for (Task task : tasks) {
+//            System.out.println(task.getId());
+//            System.out.println("Following task is available" + task.getName());
+//            // 认领任务这里由foozie认领，因为fozzie是sales组的成员
+//            taskService.claim(task.getId(), "fozzie");
+//
+//        }
+//        for (Task task : tasks) {
+//            System.out.println("Task Name " + task.getName());
+//            // 执行(完成)任务
+//            taskService.complete(task.getId());
+//        }
 
-        }
-        for (Task task : tasks) {
-            System.out.println("Task for fozzie: " + task.getName());
-            // 执行(完成)任务
-            taskService.complete(task.getId());
-        }
-
-//        TaskService taskService = processEngine.getTaskService();
-//        Task task = taskService.createTaskQuery().singleResult();
+        //获取第一个任务
+        TaskService taskService = processEngine.getTaskService();
+        Task task = taskService.createTaskQuery().singleResult();
+        System.out.println(task.getName());
+        taskService.claim(task.getId(), "yuyong");
+        taskService.complete(task.getId());
+        System.out.println(task.getName());
+//
+//        //获取第二个任务
+//        task = taskService.createTaskQuery().singleResult();
 //        System.out.println(task.getId());
 //        taskService.claim(task.getId(), "yuyong");
 //        taskService.complete(task.getId());
-//        int output = (Integer) runtimeService.getVariable("5", "output3");
-//        System.out.println(output);
+//        System.out.println(task.getName());
+
+        int output = (Integer) runtimeService.getVariable(pi.getId(), "output3");
+        System.out.println(output);
+        //获取第二个任务
+        task = taskService.createTaskQuery().singleResult();
+        System.out.println(task.getName());
+        taskService.claim(task.getId(), "yuyong");
+        taskService.complete(task.getId());
+        System.out.println(task.getName());
 
     }
 

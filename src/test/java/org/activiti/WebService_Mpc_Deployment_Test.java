@@ -31,10 +31,10 @@ public class WebService_Mpc_Deployment_Test extends AbstractTest {
         ProcessInstance pi = runtimeService.startProcessInstanceByKey(
                 "process1", vars);
         // 完成第一个任务
-        Task task = taskService.createTaskQuery().singleResult();
-        System.out.println(task.getId());
-        taskService.claim(task.getId(),"yuyong");
-        taskService.complete(task.getId());
+//        Task task = taskService.createTaskQuery().singleResult();
+//        System.out.println(task.getId());
+//        taskService.claim(task.getId(),"yuyong");
+//        taskService.complete(task.getId());
 //        taskService.complete(task.getId());
 //        // 输出调用Web Service后的参数
 //        String add = (String) runtimeService.getVariable(pi.getId(), "addVar");

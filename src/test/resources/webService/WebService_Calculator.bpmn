@@ -7,8 +7,8 @@
              xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
              typeLanguage="http://www.w3.org/2001/XMLSchema"
              expressionLanguage="http://www.w3.org/1999/XPath"
-             targetNamespace="http://service.activiti.engine.cloud.workflow.sysu.edu.cn/"
-             xmlns:tns="http://service.activiti.engine.cloud.workflow.sysu.edu.cn/"
+             targetNamespace="cn.edu.sysu.workflow.cloud.engine.activiti.service"
+             xmlns:tns="cn.edu.sysu.workflow.cloud.engine.activiti.service"
              xmlns:calculator="http://service.activiti.engine.cloud.workflow.sysu.edu.cn/">
 
     <import importType="http://schemas.xmlsoap.org/wsdl/"
@@ -21,6 +21,17 @@
         <userTask id="usertask1" name="hello"></userTask>
         <serviceTask id="servicetask1" name="calculator" implementation="##WebService"
                      operationRef="tns:plusOperation">
+            <ioSpecification>
+                <dataInput itemSubjectRef="tns:plusRequestItem" id="dataInput" />
+                <dataOutput itemSubjectRef="tns:plusResponseItem" id="dataOutput" />
+                <inputSet>
+                    <dataInputRefs>dataInput</dataInputRefs>
+                </inputSet>
+                <outputSet>
+                    <dataOutputRefs>dataOutput</dataOutputRefs>
+                </outputSet>
+            </ioSpecification>
+
 
             <!-- activiti流程变量和webservice的输入输出参数的转换 -->
             <dataInputAssociation>
@@ -37,9 +48,11 @@
             </dataOutputAssociation>
         </serviceTask>
 
+        <userTask id="usertask2" name="hello"></userTask>
         <sequenceFlow id="flow1" name="" sourceRef="startevent1" targetRef="usertask1"></sequenceFlow>
         <sequenceFlow id="flow2" name="" sourceRef="usertask1" targetRef="servicetask1"></sequenceFlow>
-        <sequenceFlow id="flow3" name="" sourceRef="servicetask1" targetRef="endevent1"></sequenceFlow>
+        <sequenceFlow id="flow3" name="" sourceRef="servicetask1" targetRef="usertask2"></sequenceFlow>
+        <sequenceFlow id="flow4" name="" sourceRef="usertask2" targetRef="endevent1"></sequenceFlow>
     </process>
 
     <!-- webservice的传入传出参数(webservice服务端明确指出),以及activiti执行代码中传入的参数引用 -->
@@ -73,9 +86,9 @@
             <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
                 <omgdc:Bounds height="35" width="35" x="590" y="160"></omgdc:Bounds>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="usertask1" id="BPMNShape_usertask1">
-                <omgdc:Bounds height="55" width="105" x="170" y="150"></omgdc:Bounds>
-            </bpmndi:BPMNShape>
+            <!--<bpmndi:BPMNShape bpmnElement="usertask1" id="BPMNShape_usertask1">-->
+                <!--<omgdc:Bounds height="55" width="105" x="170" y="150"></omgdc:Bounds>-->
+            <!--</bpmndi:BPMNShape>-->
             <bpmndi:BPMNShape bpmnElement="servicetask1" id="BPMNShape_servicetask1">
                 <omgdc:Bounds height="55" width="105" x="370" y="150"></omgdc:Bounds>
             </bpmndi:BPMNShape>

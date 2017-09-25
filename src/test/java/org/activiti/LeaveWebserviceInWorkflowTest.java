@@ -69,6 +69,11 @@ public class LeaveWebserviceInWorkflowTest extends AbstractTest {
 
         // 人事审批通过
         Task hrTask = taskService.createTaskQuery().taskCandidateGroup("hr").singleResult();
+
+        System.out.println("-----------------------------");
+        System.out.println(hrTask.getName());
+        System.out.println("-----------------------------");
+
         variables = new HashMap<String, String>();
         variables.put("hrApproved", "true");
         formService.submitTaskFormData(hrTask.getId(), variables);
