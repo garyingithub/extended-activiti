@@ -1,5 +1,6 @@
 package cn.edu.sysu.workflow.cloud.engine.activiti;
 
+import cn.edu.sysu.workflow.cloud.isolation.Scheduler;
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.identity.Group;
@@ -13,11 +14,14 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class MyApp {
 
+    public static Scheduler scheduler = new Scheduler();
+
     public static void main(String[] args) {
         SpringApplication.run(MyApp.class, args);
     }
 
     private static Class<MyApp> applicationClass = MyApp.class;
+
 
     @Bean
     InitializingBean usersAndGroupsInitializer(final IdentityService identityService, final RepositoryService repositoryService) {
