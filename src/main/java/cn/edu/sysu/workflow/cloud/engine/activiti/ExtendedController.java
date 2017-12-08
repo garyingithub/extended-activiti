@@ -91,16 +91,15 @@ public class ExtendedController {
     }
 
 
-    void completeTask(Map<String, Object> data, String processInstanceId, int weight, DeferredResult<String> result) {
+    private void completeTask(Map<String, Object> data, String processInstanceId, int weight, DeferredResult<String> result) {
 
         Scheduler.Task task = new Scheduler.Task(weight, result) {
             @Override
             public void run() {
 
-
                 List<Task> taskList = taskService.createTaskQuery().processInstanceId(processInstanceId).list();
                 if (taskList.size() == 0) {
-                    System.out.println("finish");
+                    logger.info("Process {} has finish its execution.", processInstanceId);
                     result.setResult(Boolean.FALSE.toString());
                 } else {
                     taskList.forEach(task1 -> taskService.complete(task1.getId(), data));
@@ -113,10 +112,9 @@ public class ExtendedController {
         MyApp.scheduler.submit(task);
     }
 
-    Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
-    DeferredResult<String> claimTask(String processInstanceId, int weight) {
-
+    private DeferredResult<String> claimTask(String processInstanceId, int weight) {
 
         DeferredResult<String> result = new DeferredResult<>();
         Scheduler.Task t = new Scheduler.Task(weight, result) {
@@ -155,7 +153,7 @@ public class ExtendedController {
         return repositoryService.getBpmnModel(processKey);
     }
 
-    void uploadFile(HttpServletRequest request) throws IOException {
+    private void uploadFile(HttpServletRequest request) throws IOException {
 
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(request.getSession()
                 .getServletContext());
